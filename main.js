@@ -90,7 +90,9 @@ const editorTemplate = `
                                 Browse
                                 <input type="file" @change="handleImageUpload($event, path + '.' + index + '.' + key)" accept="image/*">
                               </label>
+                              <div>
                               <img :src="value" alt="">
+                              </div>
                             </div>
                           </template>
                           <template x-if="key !== 'image'">
