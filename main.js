@@ -166,7 +166,7 @@ Alpine.data('editor', () => ({
 
     init() {
         // Fetch initial data
-        fetch('/data.json')
+        fetch('data.json')
             .then((response) => response.json())
             .then((data) => {
                 this.data = structuredClone(data);
