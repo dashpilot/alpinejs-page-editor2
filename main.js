@@ -1,9 +1,8 @@
-import './style.css'
-import './editor.css'
-import Alpine from 'alpinejs'
-import initialData from './data.json'
+import './editor.css';
+import Alpine from 'alpinejs';
+import initialData from './data.json';
 
-window.Alpine = Alpine
+window.Alpine = Alpine;
 
 const editorTemplate = `
   <div class="content-area" :class="{ 'editor-open': isEditorOpen }">
@@ -115,216 +114,216 @@ const editorTemplate = `
       <button @click="saveContent">Save</button>
     </div>
   </div>
-`
+`;
 
 // Initialize the editor
 document.addEventListener('DOMContentLoaded', () => {
-  const app = document.querySelector('#app')
-  if (!app) return
+    const app = document.querySelector('#app');
+    if (!app) return;
 
-  // Create a wrapper div with Alpine data binding
-  const wrapper = document.createElement('div')
-  wrapper.setAttribute('x-data', 'editor')
-  
-  // Store the original content
-  const originalContent = app.innerHTML
-  
-  // Set the wrapper's HTML to include both the editor template and original content
-  wrapper.innerHTML = editorTemplate
-  
-  // Find the slot element and replace it with the original content
-  const slot = wrapper.querySelector('slot')
-  if (slot) {
-    slot.outerHTML = originalContent
-  }
-  
-  // Replace the app div's content with the wrapper
-  app.innerHTML = ''
-  app.appendChild(wrapper)
-})
+    // Create a wrapper div with Alpine data binding
+    const wrapper = document.createElement('div');
+    wrapper.setAttribute('x-data', 'editor');
+
+    // Store the original content
+    const originalContent = app.innerHTML;
+
+    // Set the wrapper's HTML to include both the editor template and original content
+    wrapper.innerHTML = editorTemplate;
+
+    // Find the slot element and replace it with the original content
+    const slot = wrapper.querySelector('slot');
+    if (slot) {
+        slot.outerHTML = originalContent;
+    }
+
+    // Replace the app div's content with the wrapper
+    app.innerHTML = '';
+    app.appendChild(wrapper);
+});
 
 Alpine.directive('edit', (el, { expression }) => {
-  el.addEventListener('click', (event) => {
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-      return
-    }
-    
-    document.querySelectorAll('[x-edit]').forEach(section => {
-      section.classList.remove('active')
-    })
-    
-    el.classList.add('active')
-    
-    const component = Alpine.$data(el.closest('[x-data]'))
-    
-    component.openEditor(expression, event)
-  })
-})
+    el.addEventListener('click', (event) => {
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+            return;
+        }
+
+        document.querySelectorAll('[x-edit]').forEach((section) => {
+            section.classList.remove('active');
+        });
+
+        el.classList.add('active');
+
+        const component = Alpine.$data(el.closest('[x-data]'));
+
+        component.openEditor(expression, event);
+    });
+});
 
 Alpine.data('editor', () => ({
-  content: structuredClone(initialData),
-  isEditorOpen: false,
-  currentSection: null,
+    content: structuredClone(initialData),
+    isEditorOpen: false,
+    currentSection: null,
 
-  init() {
-    const savedContent = localStorage.getItem('pageContent')
-    if (savedContent) {
-      this.content = JSON.parse(savedContent)
-    }
-  },
+    init() {
+        const savedContent = localStorage.getItem('pageContent');
+        if (savedContent) {
+            this.content = JSON.parse(savedContent);
+        }
+    },
 
-  openEditor(section, event) {
-    this.currentSection = section
-    this.isEditorOpen = true
-  },
+    openEditor(section, event) {
+        this.currentSection = section;
+        this.isEditorOpen = true;
+    },
 
-  closeEditor() {
-    this.isEditorOpen = false
-    document.querySelectorAll('[x-edit]').forEach(section => {
-      section.classList.remove('active')
-    })
-    setTimeout(() => {
-      this.currentSection = null
-    }, 300)
-  },
+    closeEditor() {
+        this.isEditorOpen = false;
+        document.querySelectorAll('[x-edit]').forEach((section) => {
+            section.classList.remove('active');
+        });
+        setTimeout(() => {
+            this.currentSection = null;
+        }, 300);
+    },
 
-  saveContent() {
-    localStorage.setItem('pageContent', JSON.stringify(this.content))
-    console.log('Saved content:', this.content)
-    this.closeEditor()
-  },
+    saveContent() {
+        localStorage.setItem('pageContent', JSON.stringify(this.content));
+        console.log('Saved content:', this.content);
+        this.closeEditor();
+    },
 
-  formatLabel(path) {
-    const label = path.split('.').pop()
-    return label
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => str.toUpperCase())
-      .trim()
-  },
+    formatLabel(path) {
+        const label = path.split('.').pop();
+        return label
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, (str) => str.toUpperCase())
+            .trim();
+    },
 
-  getFieldPaths(obj = this.content[this.currentSection], prefix = this.currentSection) {
-    const paths = {}
-    
-    const traverse = (obj, path) => {
-      if (Array.isArray(obj)) {
-        paths[path] = obj
-        return
-      }
-      
-      if (typeof obj === 'object' && obj !== null) {
-        Object.entries(obj).forEach(([key, value]) => {
-          const newPath = path ? `${path}.${key}` : key
-          if (typeof value === 'string') {
-            paths[newPath] = value
-          } else if (Array.isArray(value)) {
-            paths[newPath] = value
-          } else if (typeof value === 'object' && value !== null) {
-            traverse(value, newPath)
-          }
-        })
-      } else if (typeof obj === 'string') {
-        paths[path] = obj
-      }
-    }
+    getFieldPaths(obj = this.content[this.currentSection], prefix = this.currentSection) {
+        const paths = {};
 
-    traverse(obj, prefix)
-    return paths
-  },
+        const traverse = (obj, path) => {
+            if (Array.isArray(obj)) {
+                paths[path] = obj;
+                return;
+            }
 
-  getValueByPath(path) {
-    return path.split('.').reduce((obj, key) => obj?.[key], this.content)
-  },
+            if (typeof obj === 'object' && obj !== null) {
+                Object.entries(obj).forEach(([key, value]) => {
+                    const newPath = path ? `${path}.${key}` : key;
+                    if (typeof value === 'string') {
+                        paths[newPath] = value;
+                    } else if (Array.isArray(value)) {
+                        paths[newPath] = value;
+                    } else if (typeof value === 'object' && value !== null) {
+                        traverse(value, newPath);
+                    }
+                });
+            } else if (typeof obj === 'string') {
+                paths[path] = obj;
+            }
+        };
 
-  setValueByPath(path, value) {
-    const keys = path.split('.')
-    const lastKey = keys.pop()
-    const obj = keys.reduce((obj, key) => obj[key], this.content)
-    if (obj) {
-      obj[lastKey] = value
-    }
-    return obj?.[lastKey] || ''
-  },
+        traverse(obj, prefix);
+        return paths;
+    },
 
-  createEmptyItem(array) {
-    const template = {}
-    if (array && array.length > 0) {
-      Object.keys(array[0]).forEach(key => {
-        template[key] = ''
-      })
-    }
-    return template
-  },
+    getValueByPath(path) {
+        return path.split('.').reduce((obj, key) => obj?.[key], this.content);
+    },
 
-  addArrayItemToStart(path) {
-    const array = this.getValueByPath(path)
-    if (array) {
-      const emptyItem = this.createEmptyItem(array)
-      array.unshift(emptyItem)
-    }
-  },
+    setValueByPath(path, value) {
+        const keys = path.split('.');
+        const lastKey = keys.pop();
+        const obj = keys.reduce((obj, key) => obj[key], this.content);
+        if (obj) {
+            obj[lastKey] = value;
+        }
+        return obj?.[lastKey] || '';
+    },
 
-  addArrayItemToEnd(path) {
-    const array = this.getValueByPath(path)
-    if (array) {
-      const emptyItem = this.createEmptyItem(array)
-      array.push(emptyItem)
-    }
-  },
+    createEmptyItem(array) {
+        const template = {};
+        if (array && array.length > 0) {
+            Object.keys(array[0]).forEach((key) => {
+                template[key] = '';
+            });
+        }
+        return template;
+    },
 
-  moveArrayItem(path, fromIndex, toIndex) {
-    const array = this.getValueByPath(path)
-    if (array && toIndex >= 0 && toIndex < array.length) {
-      const items = document.querySelectorAll('.array-item')
-      const movingUp = toIndex < fromIndex
-      
-      items[fromIndex].classList.add(movingUp ? 'moving-up' : 'moving-down')
-      items[toIndex].classList.add(movingUp ? 'moving-down' : 'moving-up')
-      
-      setTimeout(() => {
-        const item = array.splice(fromIndex, 1)[0]
-        array.splice(toIndex, 0, item)
-        
-        items[fromIndex].classList.remove(movingUp ? 'moving-up' : 'moving-down')
-        items[toIndex].classList.remove(movingUp ? 'moving-down' : 'moving-up')
-      }, 600)
-    }
-  },
+    addArrayItemToStart(path) {
+        const array = this.getValueByPath(path);
+        if (array) {
+            const emptyItem = this.createEmptyItem(array);
+            array.unshift(emptyItem);
+        }
+    },
 
-  removeArrayItem(path, index) {
-    const array = this.getValueByPath(path)
-    if (array && array.length > 1) {
-      array.splice(index, 1)
-    }
-  },
+    addArrayItemToEnd(path) {
+        const array = this.getValueByPath(path);
+        if (array) {
+            const emptyItem = this.createEmptyItem(array);
+            array.push(emptyItem);
+        }
+    },
 
-  async handleImageUpload(event, path) {
-    const file = event.target.files[0]
-    if (!file) return
+    moveArrayItem(path, fromIndex, toIndex) {
+        const array = this.getValueByPath(path);
+        if (array && toIndex >= 0 && toIndex < array.length) {
+            const items = document.querySelectorAll('.array-item');
+            const movingUp = toIndex < fromIndex;
 
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const img = new Image()
+            items[fromIndex].classList.add(movingUp ? 'moving-up' : 'moving-down');
+            items[toIndex].classList.add(movingUp ? 'moving-down' : 'moving-up');
 
-    img.onload = () => {
-      const ratio = img.width / img.height
-      const newWidth = 750
-      const newHeight = newWidth / ratio
+            setTimeout(() => {
+                const item = array.splice(fromIndex, 1)[0];
+                array.splice(toIndex, 0, item);
 
-      canvas.width = newWidth
-      canvas.height = newHeight
+                items[fromIndex].classList.remove(movingUp ? 'moving-up' : 'moving-down');
+                items[toIndex].classList.remove(movingUp ? 'moving-down' : 'moving-up');
+            }, 600);
+        }
+    },
 
-      ctx.drawImage(img, 0, 0, newWidth, newHeight)
+    removeArrayItem(path, index) {
+        const array = this.getValueByPath(path);
+        if (array && array.length > 1) {
+            array.splice(index, 1);
+        }
+    },
 
-      const resizedImage = canvas.toDataURL(file.type)
-      this.setValueByPath(path, resizedImage)
-    }
+    async handleImageUpload(event, path) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      img.src = e.target.result
-    }
-    reader.readAsDataURL(file)
-  }
-}))
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
 
-Alpine.start()
+        img.onload = () => {
+            const ratio = img.width / img.height;
+            const newWidth = 750;
+            const newHeight = newWidth / ratio;
+
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+
+            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+            const resizedImage = canvas.toDataURL(file.type);
+            this.setValueByPath(path, resizedImage);
+        };
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    },
+}));
+
+Alpine.start();
