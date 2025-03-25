@@ -279,3 +279,25 @@
     opacity: 1;
   }
 }
+
+.editor-sidebar .string-array-input textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: white;
+  color: #333;
+  font-size: 1rem;
+  box-sizing: border-box;
+  font-family: inherit;
+  height: 120px;
+  resize: none;
+  line-height: 1.6;
+  spellcheck: false;
+}
+
+.editor-sidebar .string-array-input textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}

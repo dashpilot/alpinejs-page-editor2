@@ -27,50 +27,62 @@ const editorTemplate = `
             
             <template x-if="Array.isArray(getValueByPath(path))">
               <div class="array-controls">
-                <template x-for="(item, index) in getValueByPath(path)" :key="index">
-                  <div class="array-item">
-                    <div class="array-item-header">
-                      <h4 x-text="'Item ' + (index + 1)"></h4>
-                      <div class="array-item-actions">
-                        <button 
-                          @click="moveArrayItem(path, index, index - 1)" 
-                          class="small-btn"
-                          :disabled="index === 0"
-                        >↑</button>
-                        <button 
-                          @click="moveArrayItem(path, index, index + 1)" 
-                          class="small-btn"
-                          :disabled="index === getValueByPath(path).length - 1"
-                        >↓</button>
-                        <button 
-                          @click="removeArrayItem(path, index)" 
-                          class="small-btn delete"
-                          :disabled="getValueByPath(path).length <= 1"
-                        >×</button>
-                      </div>
-                    </div>
-                    <template x-for="(value, key) in item" :key="key">
-                      <div class="input-group">
-                        <label x-text="formatLabel(key)"></label>
-                        <template x-if="key === 'image'">
-                          <div class="image-input">
-                            <label>
-                              Browse
-                              <input type="file" @change="handleImageUpload($event, path + '.' + index + '.' + key)" accept="image/*">
-                            </label>
-                            <img :src="value" alt="">
-                          </div>
-                        </template>
-                        <template x-if="key !== 'image'">
-                          <input 
-                            type="text" 
-                            :value="value"
-                            @input="item[key] = $event.target.value"
-                          >
-                        </template>
-                      </div>
-                    </template>
+                <template x-if="getValueByPath(path).length > 0 && typeof getValueByPath(path)[0] === 'string'">
+                  <div class="string-array-input">
+                    <textarea 
+                      :value="getValueByPath(path).join('\n')"
+                      @input="setValueByPath(path, $event.target.value.split('\n').filter(line => line.trim()))"
+                      rows="6"
+                      spellcheck="false"
+                    ></textarea>
                   </div>
+                </template>
+                <template x-if="!(getValueByPath(path).length > 0 && typeof getValueByPath(path)[0] === 'string')">
+                  <template x-for="(item, index) in getValueByPath(path)" :key="index">
+                    <div class="array-item">
+                      <div class="array-item-header">
+                        <h4 x-text="'Item ' + (index + 1)"></h4>
+                        <div class="array-item-actions">
+                          <button 
+                            @click="moveArrayItem(path, index, index - 1)" 
+                            class="small-btn"
+                            :disabled="index === 0"
+                          >↑</button>
+                          <button 
+                            @click="moveArrayItem(path, index, index + 1)" 
+                            class="small-btn"
+                            :disabled="index === getValueByPath(path).length - 1"
+                          >↓</button>
+                          <button 
+                            @click="removeArrayItem(path, index)" 
+                            class="small-btn delete"
+                            :disabled="getValueByPath(path).length <= 1"
+                          >×</button>
+                        </div>
+                      </div>
+                      <template x-for="(value, key) in item" :key="key">
+                        <div class="input-group">
+                          <label x-text="formatLabel(key)"></label>
+                          <template x-if="key === 'image'">
+                            <div class="image-input">
+                              <label>
+                                Browse
+                                <input type="file" @change="handleImageUpload($event, path + '.' + index + '.' + key)" accept="image/*">
+                              </label>
+                              <img :src="value" alt="">
+                            </div>
+                          </template>
+                          <template x-if="key !== 'image'">
+                            <input 
+                              type="text" 
+                              :value="value"
+                              @input="item[key] = $event.target.value"
+                            >
+                          </template>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
                 </template>
                 <div class="array-footer">
                   <button @click="addArrayItemToEnd(path)" class="small-btn">Add to End</button>
@@ -212,7 +224,12 @@ Alpine.data('editor', () => ({
 
         const traverse = (obj, path) => {
             if (Array.isArray(obj)) {
-                paths[path] = obj;
+                // If it's an array of strings, treat it as a single field
+                if (obj.length > 0 && typeof obj[0] === 'string') {
+                    paths[path] = obj;
+                } else {
+                    paths[path] = obj;
+                }
                 return;
             }
 
@@ -251,6 +268,11 @@ Alpine.data('editor', () => ({
     },
 
     createEmptyItem(array) {
+        // If it's an array of strings, return an empty string
+        if (array && array.length > 0 && typeof array[0] === 'string') {
+            return '';
+        }
+        // Otherwise create an empty object with the same structure
         const template = {};
         if (array && array.length > 0) {
             Object.keys(array[0]).forEach((key) => {
