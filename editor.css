@@ -2,6 +2,10 @@
   outline: 2px dashed #DDD;
 }
 
+[x-edit].active {
+  outline: 2px dashed #4e46dd;
+}
+
 .editor-sidebar {
   position: fixed;
   top: 0;
