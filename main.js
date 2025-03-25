@@ -117,7 +117,9 @@ const editorTemplate = `
                   Browse
                   <input type="file" @change="handleImageUpload($event, path)" accept="image/*">
                 </label>
+                <div>
                 <img :src="getValueByPath(path)" alt="">
+                </div>
               </div>
             </template>
 
