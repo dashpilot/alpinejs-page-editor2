@@ -143,7 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 Alpine.directive('edit', (el, { expression }) => {
     el.addEventListener('click', (event) => {
-        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+        // Don't open editor if clicking on interactive elements
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.tagName === 'A' || event.target.tagName === 'BUTTON' || event.target.closest('a') || event.target.closest('button')) {
             return;
         }
 
