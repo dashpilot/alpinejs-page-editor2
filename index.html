@@ -8,27 +8,31 @@
     </head>
     <body>
         <div id="app">
-            <section class="section" x-edit="hero">
-                <h1 x-text="content.hero.title"></h1>
-                <p x-text="content.hero.description"></p>
-                <a :href="content.hero.cta.url" x-text="content.hero.cta.text"></a>
-            </section>
+            <template x-if="data && data.hero">
+                <div>
+                    <section class="section" x-edit="hero">
+                        <h1 x-text="data.hero.title"></h1>
+                        <p x-text="data.hero.description"></p>
+                        <a :href="data.hero.cta.url" x-text="data.hero.cta.text"></a>
+                    </section>
 
-            <section class="section" x-edit="features">
-                <template x-for="(feature, index) in content.features" :key="index">
-                    <div class="feature">
-                        <h2 x-text="feature.title"></h2>
-                        <p x-text="feature.description"></p>
-                        <img :src="feature.image" alt="" style="width: 750px" />
-                    </div>
-                </template>
-            </section>
+                    <section class="section" x-edit="features">
+                        <template x-for="(feature, index) in data.features" :key="index">
+                            <div class="feature">
+                                <h2 x-text="feature.title"></h2>
+                                <p x-text="feature.description"></p>
+                                <img :src="feature.image" alt="" style="width: 750px" />
+                            </div>
+                        </template>
+                    </section>
 
-            <section class="section" x-edit="about">
-                <h2 x-text="content.about.heading"></h2>
-                <p x-text="content.about.content"></p>
-                <img :src="content.about.image" alt="" style="width: 750px" />
-            </section>
+                    <section class="section" x-edit="about">
+                        <h2 x-text="data.about.heading"></h2>
+                        <p x-text="data.about.content"></p>
+                        <img :src="data.about.image" alt="" style="width: 750px" />
+                    </section>
+                </div>
+            </template>
         </div>
         <script type="module" src="/main.js"></script>
     </body>

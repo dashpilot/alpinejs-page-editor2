@@ -1,6 +1,5 @@
 import './editor.css';
 import Alpine from 'alpinejs';
-import initialData from './data.json';
 
 window.Alpine = Alpine;
 
@@ -161,15 +160,21 @@ Alpine.directive('edit', (el, { expression }) => {
 });
 
 Alpine.data('editor', () => ({
-    content: structuredClone(initialData),
+    data: {},
     isEditorOpen: false,
     currentSection: null,
 
     init() {
-        const savedContent = localStorage.getItem('pageContent');
-        if (savedContent) {
-            this.content = JSON.parse(savedContent);
-        }
+        // Fetch initial data
+        fetch('/data.json')
+            .then((response) => response.json())
+            .then((data) => {
+                this.data = structuredClone(data);
+                const savedContent = localStorage.getItem('pageContent');
+                if (savedContent) {
+                    this.data = JSON.parse(savedContent);
+                }
+            });
     },
 
     openEditor(section, event) {
@@ -188,8 +193,8 @@ Alpine.data('editor', () => ({
     },
 
     saveContent() {
-        localStorage.setItem('pageContent', JSON.stringify(this.content));
-        console.log('Saved content:', this.content);
+        localStorage.setItem('pageContent', JSON.stringify(this.data));
+        console.log('Saved content:', this.data);
         this.closeEditor();
     },
 
@@ -201,7 +206,7 @@ Alpine.data('editor', () => ({
             .trim();
     },
 
-    getFieldPaths(obj = this.content[this.currentSection], prefix = this.currentSection) {
+    getFieldPaths(obj = this.data[this.currentSection], prefix = this.currentSection) {
         const paths = {};
 
         const traverse = (obj, path) => {
@@ -231,13 +236,13 @@ Alpine.data('editor', () => ({
     },
 
     getValueByPath(path) {
-        return path.split('.').reduce((obj, key) => obj?.[key], this.content);
+        return path.split('.').reduce((obj, key) => obj?.[key], this.data);
     },
 
     setValueByPath(path, value) {
         const keys = path.split('.');
         const lastKey = keys.pop();
-        const obj = keys.reduce((obj, key) => obj[key], this.content);
+        const obj = keys.reduce((obj, key) => obj[key], this.data);
         if (obj) {
             obj[lastKey] = value;
         }
