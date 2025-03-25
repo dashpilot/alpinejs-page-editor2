@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Section Editor</title>
+  </head>
+  <body>
+    <div id="app">
+      <section class="section" x-edit="hero">
+        <h1 x-text="content.hero.title"></h1>
+        <p x-text="content.hero.description"></p>
+        <a :href="content.hero.cta.url" x-text="content.hero.cta.text"></a>
+      </section>
+
+      <section class="section" x-edit="features">
+        <template x-for="(feature, index) in content.features" :key="index">
+          <div class="feature">
+            <h2 x-text="feature.title"></h2>
+            <p x-text="feature.description"></p>
+            <img :src="feature.image" alt="" style="width: 750px;">
+          </div>
+        </template>
+      </section>
+
+      <section class="section" x-edit="about">
+        <h2 x-text="content.about.heading"></h2>
+        <p x-text="content.about.content"></p>
+        <img :src="content.about.image" alt="" style="width: 750px;">
+      </section>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
