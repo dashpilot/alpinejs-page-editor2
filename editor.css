@@ -153,11 +153,31 @@
   margin-top: 0.5rem;
 }
 
+.editor-sidebar .image-input input[type="file"] {
+  display: none;
+}
+
+.editor-sidebar .image-input label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #e9ecef;
+  color: #495057;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.editor-sidebar .image-input label:hover {
+  background-color: #dee2e6;
+}
+
 .editor-sidebar .image-input img {
   max-width: 100%;
   height: auto;
   margin-top: 0.5rem;
   border-radius: 4px;
+  border: 1px solid #e9ecef;
 }
 
 .editor-sidebar .small-btn {
