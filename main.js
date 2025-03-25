@@ -28,14 +28,35 @@ const editorTemplate = `
             <template x-if="Array.isArray(getValueByPath(path))">
               <div class="array-controls">
                 <template x-if="getValueByPath(path).length > 0 && typeof getValueByPath(path)[0] === 'string'">
-                  <div class="string-array-input">
-                    <textarea 
-                      :value="getValueByPath(path).join('\n')"
-                      @input="setValueByPath(path, $event.target.value.split('\n').filter(line => line.trim()))"
-                      rows="6"
-                      spellcheck="false"
-                    ></textarea>
-                  </div>
+                  <template x-for="(item, index) in getValueByPath(path)" :key="index">
+                    <div class="array-item">
+                      <div class="array-item-header">
+                        <h4 x-text="'Item ' + (index + 1)"></h4>
+                        <div class="array-item-actions">
+                          <button 
+                            @click="moveArrayItem(path, index, index - 1)" 
+                            class="small-btn"
+                            :disabled="index === 0"
+                          >↑</button>
+                          <button 
+                            @click="moveArrayItem(path, index, index + 1)" 
+                            class="small-btn"
+                            :disabled="index === getValueByPath(path).length - 1"
+                          >↓</button>
+                          <button 
+                            @click="removeArrayItem(path, index)" 
+                            class="small-btn delete"
+                            :disabled="getValueByPath(path).length <= 1"
+                          >×</button>
+                        </div>
+                      </div>
+                      <input 
+                        type="text" 
+                        :value="item"
+                        @input="getValueByPath(path)[index] = $event.target.value"
+                      >
+                    </div>
+                  </template>
                 </template>
                 <template x-if="!(getValueByPath(path).length > 0 && typeof getValueByPath(path)[0] === 'string')">
                   <template x-for="(item, index) in getValueByPath(path)" :key="index">
