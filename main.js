@@ -11,7 +11,7 @@ const editorTemplate = `
   <div class="editor-sidebar" :class="{ 'open': isEditorOpen }">
     <div class="editor-header">
       <h2 x-text="currentSection ? 'Edit ' + currentSection : 'Select a section'"></h2>
-      <button @click="closeEditor" class="close-btn">&times;</button>
+      <button @click="closeEditor" class="close-btn"></button>
     </div>
 
     <div class="editor-content" x-show="currentSection">
@@ -21,7 +21,7 @@ const editorTemplate = `
             <div class="input-group-header">
               <label x-text="formatLabel(path)"></label>
               <template x-if="Array.isArray(getValueByPath(path))">
-                <button @click="addArrayItemToStart(path)" class="small-btn">Add to Start</button>
+                <button @click="addArrayItemToStart(path)" class="editor-btn">Add to Start</button>
               </template>
             </div>
             
@@ -90,9 +90,11 @@ const editorTemplate = `
                                 Browse
                                 <input type="file" @change="handleImageUpload($event, path + '.' + index + '.' + key)" accept="image/*">
                               </label>
-                              <div>
-                              <img :src="value" alt="">
-                              </div>
+                              <template x-if="value">
+                                <div>
+                                  <img :src="value" alt="">
+                                </div>
+                              </template>
                             </div>
                           </template>
                           <template x-if="key !== 'image'">
@@ -108,7 +110,7 @@ const editorTemplate = `
                   </template>
                 </template>
                 <div class="array-footer">
-                  <button @click="addArrayItemToEnd(path)" class="small-btn">Add to End</button>
+                  <button @click="addArrayItemToEnd(path)" class="editor-btn">Add to End</button>
                 </div>
               </div>
             </template>
@@ -119,9 +121,11 @@ const editorTemplate = `
                   Browse
                   <input type="file" @change="handleImageUpload($event, path)" accept="image/*">
                 </label>
-                <div>
-                <img :src="getValueByPath(path)" alt="">
-                </div>
+                <template x-if="getValueByPath(path)">
+                  <div>
+                    <img :src="getValueByPath(path)" alt="">
+                  </div>
+                </template>
               </div>
             </template>
 

@@ -1,27 +1,27 @@
 {
-  "hero": {
-    "title": "Welcome to our Website",
-    "description": "This is a longer description that will automatically become a textarea because it's a longer string of text.",
-    "cta": {
-      "text": "Get Started",
-      "url": "/start"
-    }
-  },
-  "features": [
-    {
-      "title": "Feature 1",
-      "description": "Feature 1 description",
-      "image": "/feature1.jpg"
+    "hero": {
+        "title": "Welcome to our Website",
+        "description": "This is a longer description that will automatically become a textarea because it's a longer string of text.",
+        "cta": {
+            "text": "Get Started",
+            "url": "/start"
+        }
     },
-    {
-      "title": "Feature 2",
-      "description": "Feature 2 description",
-      "image": "/feature2.jpg"
+    "features": [
+        {
+            "title": "Feature 1",
+            "description": "Feature 1 description",
+            "image": ""
+        },
+        {
+            "title": "Feature 2",
+            "description": "Feature 2 description",
+            "image": ""
+        }
+    ],
+    "about": {
+        "heading": "About Us",
+        "content": "This is a long paragraph about our company and what we do. It will automatically become a textarea because it's a longer piece of content that requires multiple lines.",
+        "image": ""
     }
-  ],
-  "about": {
-    "heading": "About Us",
-    "content": "This is a long paragraph about our company and what we do. It will automatically become a textarea because it's a longer piece of content that requires multiple lines.",
-    "image": "/about.jpg"
-  }
 }

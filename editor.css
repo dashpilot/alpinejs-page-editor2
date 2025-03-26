@@ -1,65 +1,221 @@
-[x-edit]:hover {
-  outline: 2px dashed #999;
+/* Styling for Add to Start/End buttons */
+.editor-sidebar .editor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #212529;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.editor-sidebar .editor-btn:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}
+
+/* Position styling for Add to Start/End buttons */
+.editor-sidebar .add-btn-container {
+  display: flex;
+  gap: 10px;
+  margin: 5px 0;
+}
+
+.editor-sidebar .add-to-start,
+.editor-sidebar .add-to-end {
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Base styles to match the second file */
+.editor-sidebar *,
+.editor * {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+/* Replace x-edit with x-editable styling */
+[x-edit] {
+  position: relative;
+  cursor: pointer;
+  border: 2px dashed transparent;
+  transition: border-color 0.2s ease;
+}
+
+[x-edit]:hover {
+  border-color: rgba(79, 70, 229, 0.3);
 }
 
 [x-edit].active {
-  outline: 2px dashed #4e46dd;
+  border-color: rgb(79, 70, 229);
 }
 
+[x-edit]::before {
+  content: attr(x-edit);
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background: rgb(79, 70, 229);
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+[x-edit]:hover::before,
+[x-edit].active::before {
+  opacity: 1;
+}
+
+/* Editor sidebar styling to match the second file */
 .editor-sidebar {
   position: fixed;
   top: 0;
-  right: -400px;
-  width: 400px;
-  height: 100vh;
+  right: 0;
+  width: 375px;
+  height: 100%;
   background-color: white;
-  color: #333;
-  transition: right 0.3s ease;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 999;
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
 }
 
 .editor-sidebar.open {
-  right: 0;
+  transform: translateX(0);
 }
 
 .editor-sidebar .editor-header {
-  padding: 10px 20px;
-  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: white;
+  z-index: 10;
   border-bottom: 1px solid #e9ecef;
 }
 
 .editor-sidebar .editor-header h2 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a202c;
+  padding: 15px 20px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #2d3748;
+  position: relative;
+}
+
+.editor-sidebar .editor-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20px;
+  width: 60px;
+  height: 3px;
+  background-color: #4361ee;
+}
+
+.editor-sidebar .close-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 15px 20px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.editor-sidebar .close-btn:hover {
+  color: #343a40;
+  opacity: 1;
 }
 
 .editor-sidebar .editor-content {
-  flex: 1;
-  padding: 20px;
+  padding: 25px 20px;
+  padding-bottom: 80px;
   overflow-y: auto;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+/* Tab-specific styling */
+.editor-sidebar .editor-tabs {
+  display: flex;
+  border-bottom: 1px solid #e9ecef;
+  padding: 0 15px;
+}
+
+.editor-sidebar .editor-tab {
+  padding: 10px 15px;
+  position: relative;
+  cursor: pointer;
+}
+
+.editor-sidebar .editor-tab.active {
+  color: #4361ee;
+}
+
+.editor-sidebar .editor-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 3px;
+  background-color: #4361ee;
 }
 
 .editor-sidebar .editor-footer {
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-top: 1px solid #e9ecef;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  width: 100%;
+  z-index: 100;
 }
 
-.editor-sidebar .editor-footer button {
-  width: 100%;
+/* Form styling to match second file */
+.editor-sidebar .label,
+.editor-sidebar .input-group label {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  display: block;
+  color: #212529;
+  font-weight: 500;
 }
 
 .editor-sidebar .input-group {
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
+}
+
+.editor-sidebar .input-group:last-of-type {
+  margin-bottom: 5px;
 }
 
 .editor-sidebar .input-group-header {
@@ -68,67 +224,118 @@
   align-items: center;
 }
 
-.editor-sidebar .input-group label {
-  display: block;
-  color: #495057;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-  margin-bottom: 5px;
-}
-
+/* Input element styling */
 .editor-sidebar .input-group input,
 .editor-sidebar .input-group textarea {
+  display: block;
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  background-color: white;
-  color: #333;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
-  box-sizing: border-box;
-  font-family: inherit;
-}
-
-.editor-sidebar .input-group textarea {
-  height: 120px;
-  resize: none;
-  line-height: 1.6;
-  spellcheck: false;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .editor-sidebar .input-group input:focus,
 .editor-sidebar .input-group textarea:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
-.editor-sidebar .array-controls {
-  margin: 1rem 0;
-  position: relative;
+.editor-sidebar .input-group textarea {
+  height: 150px;
+  resize: none;
 }
 
+/* Button styling */
+.editor-sidebar button {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.editor-sidebar button.primary,
+.editor-sidebar .editor-footer button {
+  color: #fff;
+  background-color: #212529;
+  border-color: #212529;
+  width: 100%;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.editor-sidebar button.primary:hover,
+.editor-sidebar .editor-footer button:hover {
+  color: #fff;
+  background-color: #1c1f23;
+  border-color: #1a1e21;
+}
+
+.editor-sidebar button.secondary {
+  color: #6c757d;
+  border-color: #cfd4d9;
+}
+
+.editor-sidebar button.secondary:hover {
+  color: #fff;
+  background-color: #a1abb7;
+  border-color: #a1abb7;
+}
+
+.editor-sidebar .close-btn {
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  padding: 0.25em 0.25em;
+  color: #000;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M1 1l14 14M15 1L1 15'/%3e%3c/svg%3e") center/1em auto no-repeat;
+  border: 0;
+  border-radius: 0.25rem;
+  opacity: 0.5;
+  margin-right: 10px;
+}
+
+.editor-sidebar .close-btn:hover {
+  color: #000;
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+/* Group/Item section styling */
 .editor-sidebar .array-item {
-  padding: 1rem;
-  margin: 0;
-  margin-bottom: 1rem;
-  background-color: #f8f9fa;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  border: 1px solid #e9ecef;
+  margin-bottom: 15px;
   position: relative;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  transform-origin: center center;
-  opacity: 1;
 }
 
-.editor-sidebar .array-item.moving-up {
-  animation: moveUp 0.6s ease forwards;
-}
-
-.editor-sidebar .array-item.moving-down {
-  animation: moveDown 0.6s ease forwards;
+.editor-sidebar .array-item hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 15px 0;
 }
 
 .editor-sidebar .array-item-header {
@@ -136,69 +343,53 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .editor-sidebar .array-item-header h4 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #2d3748;
 }
 
 .editor-sidebar .array-item-actions {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
-.editor-sidebar .array-footer {
-  margin-top: 1rem;
-  text-align: center;
-}
-
-.editor-sidebar .image-input {
-  margin-top: 0.5rem;
-}
-
-.editor-sidebar .image-input input[type="file"] {
-  display: none;
-}
-
-.editor-sidebar .image-input label {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: #e9ecef;
-  color: #495057;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: all 0.2s;
-}
-
-.editor-sidebar .image-input label:hover {
-  background-color: #dee2e6;
-}
-
-.editor-sidebar .image-input img {
-  width: 95px;
-  height: auto;
-  margin-top: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #e9ecef;
-}
-
+/* Small buttons and utility classes */
 .editor-sidebar .small-btn {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
   border: 1px solid #dee2e6;
-  background-color: white;
-  color: #495057;
-  border-radius: 4px;
+  color: #212529;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .editor-sidebar .small-btn:hover {
-  background-color: #f8f9fa;
-  border-color: #adb5bd;
+  background-color: #e9ecef;
+}
+
+.editor-sidebar .small-btn.delete,
+.editor-sidebar .small-btn.remove {
+  color: #dc3545;
+}
+
+.editor-sidebar .small-btn.delete:hover,
+.editor-sidebar .small-btn.remove:hover {
+  background-color: #dc3545;
+  color: white;
 }
 
 .editor-sidebar .small-btn:disabled {
@@ -206,51 +397,78 @@
   cursor: not-allowed;
 }
 
-.editor-sidebar .small-btn.delete {
-  color: #dc3545;
-  border-color: #dc3545;
+/* Switch component styling */
+.editor-sidebar .switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
 }
 
-.editor-sidebar .small-btn.delete:hover {
-  background-color: #dc3545;
-  color: white;
+.editor-sidebar .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.editor-sidebar .close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #6c757d;
+.editor-sidebar .switch-label {
+  position: absolute;
   cursor: pointer;
-  padding: 0.25rem;
-  line-height: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
 }
 
-.editor-sidebar .close-btn:hover {
-  color: #343a40;
-}
-
-.editor-sidebar button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #dee2e6;
+.editor-sidebar .switch-label:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
-  color: #495057;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
-.editor-sidebar button:hover {
-  background-color: #f8f9fa;
-  border-color: #adb5bd;
+.editor-sidebar .switch input:checked+.switch-label {
+  background-color: rgb(79, 70, 229);
 }
 
-.editor-sidebar button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.editor-sidebar .switch input:checked+.switch-label:before {
+  transform: translateX(20px);
 }
 
+/* Utility classes */
+.editor-sidebar .text-center {
+  text-align: center;
+}
+
+.editor-sidebar .float-end {
+  float: right;
+}
+
+.editor-sidebar .w-100 {
+  width: 100%;
+}
+
+.editor-sidebar .mt-2 {
+  margin-top: 10px;
+}
+
+.editor-sidebar .mt-3 {
+  margin-top: 15px;
+}
+
+.editor-sidebar .mt-4 {
+  margin-top: 20px;
+}
+
+/* Animation */
 @keyframes moveUp {
   0% {
     transform: translateY(0);
@@ -285,13 +503,82 @@
   }
 }
 
+.editor-sidebar .array-item.moving-up {
+  animation: moveUp 0.6s ease forwards;
+}
+
+.editor-sidebar .array-item.moving-down {
+  animation: moveDown 0.6s ease forwards;
+}
+
+/* Image input styling */
+.editor-sidebar .image-input {
+  margin-top: 0;
+}
+
+.editor-sidebar .image-input input[type="file"] {
+  display: none;
+}
+
+.editor-sidebar .image-input label,
+.editor-sidebar .browse-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #e9ecef;
+  color: #495057;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  margin-top: 5px;
+}
+
+.editor-sidebar .image-input label:hover,
+.editor-sidebar .browse-btn:hover {
+  background-color: #dee2e6;
+}
+
+.editor-sidebar .image-area {
+  margin-top: 10px;
+  min-height: 30px;
+  background-color: transparent;
+  border: none;
+}
+
+.editor-sidebar .image-input img {
+  width: 95px;
+  height: auto;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+/* Tabs */
+.editor-sidebar .tabs {
+  border-bottom: 1px solid #ddd;
+  height: 45px;
+  padding-left: 20px;
+  margin-bottom: -10px;
+}
+
+.editor-sidebar .tab {
+  padding: 10px;
+  padding-top: 20px;
+}
+
+.editor-sidebar .tab-active {
+  border-bottom: 3px solid #1e41f3;
+}
+
+/* String array input */
 .editor-sidebar .string-array-input textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid #ced4da;
   border-radius: 8px;
   background-color: white;
-  color: #333;
+  color: #212529;
   font-size: 1rem;
   box-sizing: border-box;
   font-family: inherit;
@@ -303,6 +590,6 @@
 
 .editor-sidebar .string-array-input textarea:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
