@@ -243,8 +243,9 @@ Alpine.data('editor', () => ({
     formatLabel(path) {
         const label = path.split('.').pop();
         return label
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, (str) => str.toUpperCase())
+            .replace(/_/g, ' ') // Replace underscores with spaces
+            .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+            .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
             .trim();
     },
 
