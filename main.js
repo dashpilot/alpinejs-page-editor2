@@ -227,6 +227,8 @@ Alpine.data('editor', () => ({
 				if (savedContent) {
 					this.data = JSON.parse(savedContent);
 				}
+
+				console.log(this.data);
 			});
 	},
 
