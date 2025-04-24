@@ -223,9 +223,13 @@ Alpine.data('editor', () => ({
 			.then((response) => response.json())
 			.then((data) => {
 				this.data = structuredClone(data);
-				const savedContent = localStorage.getItem('pageContent');
-				if (savedContent) {
-					this.data = JSON.parse(savedContent);
+
+				// Only load from localStorage if enabled
+				if (window.cfg.local_storage !== false) {
+					const savedContent = localStorage.getItem('pageContent');
+					if (savedContent) {
+						this.data = JSON.parse(savedContent);
+					}
 				}
 
 				console.log(this.data);
@@ -248,9 +252,11 @@ Alpine.data('editor', () => ({
 	},
 
 	saveContent() {
-		// Save to localStorage
-		localStorage.setItem('pageContent', JSON.stringify(this.data));
-		console.log('Saved content:', this.data);
+		// Save to localStorage if enabled
+		if (window.cfg.local_storage !== false) {
+			localStorage.setItem('pageContent', JSON.stringify(this.data));
+			console.log('Saved content to localStorage:', this.data);
+		}
 
 		// If save_url is configured, send data to endpoint
 		if (window.cfg.save_url) {
