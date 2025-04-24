@@ -246,8 +246,33 @@ Alpine.data('editor', () => ({
 	},
 
 	saveContent() {
+		// Save to localStorage
 		localStorage.setItem('pageContent', JSON.stringify(this.data));
 		console.log('Saved content:', this.data);
+
+		// If save_url is configured, send data to endpoint
+		if (window.cfg.save_url) {
+			fetch(window.cfg.save_url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					data: this.data,
+					template: window.cfg.template || null
+				})
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					console.log('Data saved to server successfully');
+				})
+				.catch((error) => {
+					console.error('Error saving to server:', error);
+				});
+		}
+
 		this.closeEditor();
 	},
 
