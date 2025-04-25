@@ -302,7 +302,24 @@ Alpine.data('editor', () => ({
 				if (obj.length > 0 && typeof obj[0] === 'string') {
 					paths[path] = obj;
 				} else {
-					paths[path] = obj;
+					// For arrays of objects, we need to handle each object separately
+					obj.forEach((item, index) => {
+						if (typeof item === 'object' && item !== null) {
+							Object.entries(item).forEach(([key, value]) => {
+								// Skip keys with the name 'id'
+								if (key === 'id') return;
+
+								const newPath = `${path}.${index}.${key}`;
+								if (typeof value === 'string') {
+									paths[newPath] = value;
+								} else if (Array.isArray(value)) {
+									paths[newPath] = value;
+								} else if (typeof value === 'object' && value !== null) {
+									traverse(value, newPath);
+								}
+							});
+						}
+					});
 				}
 				return;
 			}
