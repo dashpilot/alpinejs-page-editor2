@@ -371,31 +371,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  color: #212529;
+  background-color: transparent;
+  border: none;
+  color: #666;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .editor-sidebar .small-btn:hover {
-  background-color: #e9ecef;
+  opacity: 0.7;
 }
 
 .editor-sidebar .small-btn.delete,
 .editor-sidebar .small-btn.remove {
-  color: #dc3545;
+  color: #666;
 }
 
 .editor-sidebar .small-btn.delete:hover,
 .editor-sidebar .small-btn.remove:hover {
-  background-color: #dc3545;
-  color: white;
+  background-color: transparent;
+  opacity: 0.7;
 }
 
 .editor-sidebar .small-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
