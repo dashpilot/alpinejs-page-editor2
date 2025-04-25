@@ -309,6 +309,9 @@ Alpine.data('editor', () => ({
 
 			if (typeof obj === 'object' && obj !== null) {
 				Object.entries(obj).forEach(([key, value]) => {
+					// Skip keys with the name 'id'
+					if (key === 'id') return;
+
 					const newPath = path ? `${path}.${key}` : key;
 					if (typeof value === 'string') {
 						paths[newPath] = value;
