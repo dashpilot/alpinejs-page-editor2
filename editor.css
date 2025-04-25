@@ -375,7 +375,7 @@
   color: #333;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  line-height: 1;
 }
 
 .editor-sidebar .small-btn:hover {
@@ -396,6 +396,10 @@
 .editor-sidebar .small-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.editor-sidebar .delete-icon {
+  margin-top: -3px;
 }
 
 /* Switch component styling */

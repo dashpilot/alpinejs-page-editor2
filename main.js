@@ -82,7 +82,7 @@ const editorTemplate = `
                             @click="removeArrayItem(path, index)" 
                             class="small-btn delete"
                             :disabled="getValueByPath(path).length <= 1"
-                          >×</button>
+                          ><span class="delete-icon">×</span></button>
                         </div>
                       </div>
                       <template x-for="(value, key) in item" :key="key">
