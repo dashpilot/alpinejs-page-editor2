@@ -21,7 +21,7 @@ const editorTemplate = `
     <div class="editor-content" x-show="currentSection">
       <div class="dynamic-inputs">
         <template x-for="(field, path) in getFieldPaths()" :key="path">
-          <div class="input-group">
+          <div class="input-group" x-show="!path.endsWith('.id')">
             <div class="input-group-header">
               <label x-text="formatLabel(path)"></label>
               <template x-if="Array.isArray(getValueByPath(path))">
@@ -86,7 +86,7 @@ const editorTemplate = `
                         </div>
                       </div>
                       <template x-for="(value, key) in item" :key="key">
-                        <div class="input-group">
+                        <div class="input-group" x-show="key !== 'id'">
                           <label x-text="formatLabel(key)"></label>
                           <template x-if="key === 'image'">
                             <div class="image-input">
@@ -302,33 +302,13 @@ Alpine.data('editor', () => ({
 				if (obj.length > 0 && typeof obj[0] === 'string') {
 					paths[path] = obj;
 				} else {
-					// For arrays of objects, we need to handle each object separately
-					obj.forEach((item, index) => {
-						if (typeof item === 'object' && item !== null) {
-							Object.entries(item).forEach(([key, value]) => {
-								// Skip keys with the name 'id'
-								if (key === 'id') return;
-
-								const newPath = `${path}.${index}.${key}`;
-								if (typeof value === 'string') {
-									paths[newPath] = value;
-								} else if (Array.isArray(value)) {
-									paths[newPath] = value;
-								} else if (typeof value === 'object' && value !== null) {
-									traverse(value, newPath);
-								}
-							});
-						}
-					});
+					paths[path] = obj;
 				}
 				return;
 			}
 
 			if (typeof obj === 'object' && obj !== null) {
 				Object.entries(obj).forEach(([key, value]) => {
-					// Skip keys with the name 'id'
-					if (key === 'id') return;
-
 					const newPath = path ? `${path}.${key}` : key;
 					if (typeof value === 'string') {
 						paths[newPath] = value;
