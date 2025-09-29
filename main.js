@@ -225,7 +225,7 @@ const editorTemplate = `
         </button>
       </div>
       <div class="modal-body">
-        <p>Publish functionality will be implemented here.</p>
+        <p>Coming soon.</p>
       </div>
     </div>
   </div>
