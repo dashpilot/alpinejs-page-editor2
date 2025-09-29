@@ -225,7 +225,41 @@ const editorTemplate = `
         </button>
       </div>
       <div class="modal-body">
-        <p>Coming soon.</p>
+        <p>Ready to publish your changes?</p>
+        
+        <!-- Publish Button -->
+        <div x-show="!publishSuccess" class="publish-section">
+          <button 
+            class="publish-btn" 
+            @click="publishSite()"
+            :disabled="isPublishing"
+            :class="{ 'loading': isPublishing }"
+          >
+            <span x-show="!isPublishing">
+              <i class="bi bi-cloud-upload"></i>
+              Publish
+            </span>
+            <span x-show="isPublishing" class="spinner-container">
+              <div class="spinner"></div>
+              Publishing...
+            </span>
+          </button>
+        </div>
+
+        <!-- Success Section -->
+        <div x-show="publishSuccess" class="success-section">
+          <div class="success-message">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Successfully published!</span>
+          </div>
+          <button 
+            class="view-site-btn" 
+            @click="viewSite()"
+          >
+            <i class="bi bi-box-arrow-up-right"></i>
+            View Site
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -288,6 +322,9 @@ Alpine.data('editor', () => ({
 	isEditorOpen: false,
 	currentSection: null,
 	showPublishModal: false,
+	isPublishing: false,
+	publishSuccess: false,
+	publishedUrl: null,
 
 	init() {
 		// Fetch initial data from configured URL
@@ -538,6 +575,44 @@ Alpine.data('editor', () => ({
 
 	goToDashboard() {
 		window.location.href = '/dashboard';
+	},
+
+	async publishSite() {
+		this.isPublishing = true;
+		this.publishSuccess = false;
+		this.publishedUrl = null;
+
+		try {
+			// Add 3-second delay to show spinner
+			await new Promise((resolve) => setTimeout(resolve, 3000));
+
+			// Send GET request to /api/publish
+			const response = await fetch('/api/publish', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			this.publishedUrl = result.url || result;
+			this.publishSuccess = true;
+		} catch (error) {
+			console.error('Publish failed:', error);
+			alert('Failed to publish. Please try again.');
+		} finally {
+			this.isPublishing = false;
+		}
+	},
+
+	viewSite() {
+		if (this.publishedUrl) {
+			window.open(this.publishedUrl, '_blank');
+		}
 	}
 }));
 
