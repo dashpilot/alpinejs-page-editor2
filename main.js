@@ -259,7 +259,7 @@ const editorTemplate = `
             <i class="bi bi-box-arrow-up-right"></i>
             View Site
           </button>
-        </div>fix
+        </div>
       </div>
     </div>
   </div>
