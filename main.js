@@ -586,8 +586,12 @@ Alpine.data('editor', () => ({
 			// Add 3-second delay to show spinner
 			await new Promise((resolve) => setTimeout(resolve, 3000));
 
+			// Build URL with template parameter
+			const template = window.cfg.template || '';
+			const url = `/api/publish${template ? `?template=${encodeURIComponent(template)}` : ''}`;
+
 			// Send GET request to /api/publish
-			const response = await fetch('/api/publish', {
+			const response = await fetch(url, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
