@@ -133,7 +133,30 @@ const editorTemplate = `
               </div>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && getValueByPath(path).length > 50">
+            <template x-if="typeof getValueByPath(path) === 'string' && path.endsWith('body')">
+              <div class="rich-text-editor">
+                <div class="rich-text-toolbar">
+                  <button type="button" @click="formatText('bold')" class="toolbar-btn" title="Bold">
+                    <strong>B</strong>
+                  </button>
+                  <button type="button" @click="formatText('italic')" class="toolbar-btn" title="Italic">
+                    <em>I</em>
+                  </button>
+                  <button type="button" @click="insertLink()" class="toolbar-btn" title="Insert Link">
+                    🔗
+                  </button>
+                </div>
+                <div 
+                  class="rich-text-content" 
+                  contenteditable="true"
+                  @input="updateRichText(path, $event)"
+                  @blur="updateRichText(path, $event)"
+                  x-html="getValueByPath(path)"
+                ></div>
+              </div>
+            </template>
+
+            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !path.endsWith('body') && getValueByPath(path).length > 50">
               <textarea 
                 :value="getValueByPath(path)"
                 @input="setValueByPath(path, $event.target.value)"
@@ -142,7 +165,7 @@ const editorTemplate = `
               ></textarea>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && getValueByPath(path).length <= 50">
+            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !path.endsWith('body') && getValueByPath(path).length <= 50">
               <input 
                 type="text" 
                 :value="getValueByPath(path)"
@@ -425,6 +448,28 @@ Alpine.data('editor', () => ({
 			img.src = e.target.result;
 		};
 		reader.readAsDataURL(file);
+	},
+
+	updateRichText(path, event) {
+		const content = event.target.innerHTML;
+		this.setValueByPath(path, content);
+	},
+
+	formatText(command) {
+		document.execCommand(command, false, null);
+		// Trigger input event to update Alpine.js reactivity
+		const event = new Event('input', { bubbles: true });
+		document.activeElement.dispatchEvent(event);
+	},
+
+	insertLink() {
+		const url = prompt('Enter URL:');
+		if (url) {
+			document.execCommand('createLink', false, url);
+			// Trigger input event to update Alpine.js reactivity
+			const event = new Event('input', { bubbles: true });
+			document.activeElement.dispatchEvent(event);
+		}
 	}
 }));
 

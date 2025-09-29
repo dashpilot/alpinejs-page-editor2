@@ -1,39 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Dynamic Section Editor</title>
-        <link href="assets/style.css" rel="stylesheet" />
-    </head>
-    <body>
-        <div id="app">
-            <template x-if="data && data.hero">
-                <div>
-                    <section class="section" x-edit="hero">
-                        <h1 x-text="data.hero.title"></h1>
-                        <p x-text="data.hero.description"></p>
-                        <a :href="data.hero.cta.url" x-text="data.hero.cta.text"></a>
-                    </section>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dynamic Section Editor</title>
+		<link href="assets/style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="app">
+			<template x-if="data && data.hero">
+				<div>
+					<section class="section" x-edit="hero">
+						<h1 x-text="data.hero.title"></h1>
+						<p x-text="data.hero.description"></p>
+						<a :href="data.hero.cta.url" x-text="data.hero.cta.text"></a>
+					</section>
 
-                    <section class="section" x-edit="features">
-                        <template x-for="(feature, index) in data.features" :key="index">
-                            <div class="feature">
-                                <h2 x-text="feature.title"></h2>
-                                <p x-text="feature.description"></p>
-                                <img :src="feature.image" alt="" style="width: 750px" />
-                            </div>
-                        </template>
-                    </section>
+					<section class="section" x-edit="features">
+						<template x-for="(feature, index) in data.features" :key="index">
+							<div class="feature">
+								<h2 x-text="feature.title"></h2>
+								<p x-text="feature.description"></p>
+								<img :src="feature.image" alt="" style="width: 750px" />
+							</div>
+						</template>
+					</section>
 
-                    <section class="section" x-edit="about">
-                        <h2 x-text="data.about.heading"></h2>
-                        <p x-text="data.about.content"></p>
-                        <img :src="data.about.image" alt="" style="width: 750px" />
-                    </section>
-                </div>
-            </template>
-        </div>
-        <script type="module" src="/main.js"></script>
-    </body>
+					<section class="section" x-edit="about">
+						<h2 x-text="data.about.heading"></h2>
+						<p x-text="data.about.content"></p>
+						<img :src="data.about.image" alt="" style="width: 750px" />
+					</section>
+
+					<section class="section" x-edit="body">
+						<div x-html="data.body"></div>
+					</section>
+				</div>
+			</template>
+		</div>
+		<script type="module" src="/main.js"></script>
+	</body>
 </html>
