@@ -136,14 +136,14 @@ const editorTemplate = `
             <template x-if="typeof getValueByPath(path) === 'string' && path.endsWith('body')">
               <div class="rich-text-editor">
                 <div class="rich-text-toolbar">
-                  <button type="button" @click="formatText('bold')" class="toolbar-btn" title="Bold">
-                    <strong>B</strong>
+                  <button type="button" @click="formatText('bold', $event)" class="toolbar-btn" title="Bold">
+                    <i class="bi bi-type-bold"></i>
                   </button>
-                  <button type="button" @click="formatText('italic')" class="toolbar-btn" title="Italic">
-                    <em>I</em>
+                  <button type="button" @click="formatText('italic', $event)" class="toolbar-btn" title="Italic">
+                    <i class="bi bi-type-italic"></i>
                   </button>
-                  <button type="button" @click="insertLink()" class="toolbar-btn" title="Insert Link">
-                    🔗
+                  <button type="button" @click="insertLink($event)" class="toolbar-btn" title="Insert Link">
+                    <i class="bi bi-link-45deg"></i>
                   </button>
                 </div>
                 <div 
@@ -151,7 +151,9 @@ const editorTemplate = `
                   contenteditable="true"
                   @input="updateRichText(path, $event)"
                   @blur="updateRichText(path, $event)"
-                  x-html="getValueByPath(path)"
+                  :data-path="path"
+                  x-ref="richTextEditor"
+                  x-init="initRichTextEditor($el, path)"
                 ></div>
               </div>
             </template>
@@ -451,24 +453,39 @@ Alpine.data('editor', () => ({
 	},
 
 	updateRichText(path, event) {
+		// Only update if content actually changed to avoid unnecessary re-renders
 		const content = event.target.innerHTML;
-		this.setValueByPath(path, content);
+		const currentContent = this.getValueByPath(path);
+
+		if (content !== currentContent) {
+			this.setValueByPath(path, content);
+		}
 	},
 
-	formatText(command) {
+	formatText(command, event) {
+		event.preventDefault();
 		document.execCommand(command, false, null);
-		// Trigger input event to update Alpine.js reactivity
-		const event = new Event('input', { bubbles: true });
-		document.activeElement.dispatchEvent(event);
+		// Focus back to the editor
+		const editor = event.target.closest('.rich-text-editor').querySelector('.rich-text-content');
+		editor.focus();
 	},
 
-	insertLink() {
+	insertLink(event) {
+		event.preventDefault();
 		const url = prompt('Enter URL:');
 		if (url) {
 			document.execCommand('createLink', false, url);
-			// Trigger input event to update Alpine.js reactivity
-			const event = new Event('input', { bubbles: true });
-			document.activeElement.dispatchEvent(event);
+			// Focus back to the editor
+			const editor = event.target.closest('.rich-text-editor').querySelector('.rich-text-content');
+			editor.focus();
+		}
+	},
+
+	initRichTextEditor(element, path) {
+		// Set initial content without triggering reactivity issues
+		const content = this.getValueByPath(path);
+		if (content && content !== element.innerHTML) {
+			element.innerHTML = content;
 		}
 	}
 }));
