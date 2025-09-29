@@ -230,7 +230,7 @@ const editorTemplate = `
         <!-- Publish Button -->
         <div x-show="!publishSuccess" class="publish-section">
           <button 
-            class="publish-btn" 
+            class="modal-publish-btn" 
             @click="publishSite()"
             :disabled="isPublishing"
             :class="{ 'loading': isPublishing }"
@@ -259,7 +259,7 @@ const editorTemplate = `
             <i class="bi bi-box-arrow-up-right"></i>
             View Site
           </button>
-        </div>
+        </div>fix
       </div>
     </div>
   </div>

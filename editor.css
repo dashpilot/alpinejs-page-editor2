@@ -842,7 +842,7 @@
   text-align: center;
 }
 
-.publish-btn {
+.modal-publish-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -859,19 +859,19 @@
   justify-content: center;
 }
 
-.publish-btn:hover:not(:disabled) {
+.modal-publish-btn:hover:not(:disabled) {
   background-color: #0b5ed7;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
 }
 
-.publish-btn:disabled {
+.modal-publish-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
 }
 
-.publish-btn.loading {
+.modal-publish-btn.loading {
   background-color: #6c757d;
 }
 
