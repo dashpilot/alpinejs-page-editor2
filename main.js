@@ -183,6 +183,52 @@ const editorTemplate = `
       <button @click="saveContent">Save</button>
     </div>
   </div>
+
+  <!-- Floating Menu -->
+  <div class="floating-menu">
+    <button class="floating-btn dashboard-btn" @click="goToDashboard">
+      <i class="bi bi-speedometer2"></i>
+      <span>Dashboard</span>
+    </button>
+    <button class="floating-btn publish-btn" @click="showPublishModal = true">
+      <i class="bi bi-cloud-upload"></i>
+      <span>Publish</span>
+    </button>
+  </div>
+
+  <!-- Publish Modal -->
+  <div 
+    class="modal-overlay" 
+    x-show="showPublishModal" 
+    @click="showPublishModal = false"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+  >
+    <div 
+      class="modal" 
+      @click.stop
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:enter-start="opacity-0 transform scale-95"
+      x-transition:enter-end="opacity-100 transform scale-100"
+      x-transition:leave="transition ease-in duration-200"
+      x-transition:leave-start="opacity-100 transform scale-100"
+      x-transition:leave-end="opacity-0 transform scale-95"
+    >
+      <div class="modal-header">
+        <h3>Publish</h3>
+        <button class="modal-close" @click="showPublishModal = false">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Publish functionality will be implemented here.</p>
+      </div>
+    </div>
+  </div>
 `;
 
 // Initialize the editor
@@ -241,6 +287,7 @@ Alpine.data('editor', () => ({
 	data: {},
 	isEditorOpen: false,
 	currentSection: null,
+	showPublishModal: false,
 
 	init() {
 		// Fetch initial data from configured URL
@@ -487,6 +534,10 @@ Alpine.data('editor', () => ({
 		if (content && content !== element.innerHTML) {
 			element.innerHTML = content;
 		}
+	},
+
+	goToDashboard() {
+		window.location.href = '/dashboard';
 	}
 }));
 
