@@ -12,9 +12,21 @@ const editorTemplate = `
     <slot></slot>
   </div>
 
-  <div class="editor-sidebar" :class="{ 'open': isEditorOpen }">
+  <div class="editor-sidebar" :class="{ 'open': isEditorOpen, 'wide': isSidebarWide }">
     <div class="editor-header">
-      <h2 x-text="currentSection ? 'Edit ' + currentSection : 'Select a section'"></h2>
+      <div class="editor-header-main">
+        <button 
+          class="width-toggle-btn" 
+          type="button" 
+          @click="toggleSidebarWidth"
+          :aria-pressed="isSidebarWide.toString()"
+          :title="isSidebarWide ? 'Switch to narrow editor' : 'Switch to wide editor'"
+        >
+          <i :class="isSidebarWide ? 'bi bi-arrows-angle-contract' : 'bi bi-arrows-angle-expand'"></i>
+          <span x-text="isSidebarWide ? 'Narrow panel' : 'Widen panel'"></span>
+        </button>
+        <h2 x-text="currentSection ? 'Edit ' + currentSection : 'Select a section'"></h2>
+      </div>
       <button @click="closeEditor" class="close-btn"></button>
     </div>
 
@@ -360,6 +372,7 @@ Alpine.data('editor', () => ({
 	data: {},
 	isEditorOpen: false,
 	currentSection: null,
+	isSidebarWide: false,
 	showPublishModal: false,
 	isPublishing: false,
 	publishSuccess: false,
@@ -382,6 +395,10 @@ Alpine.data('editor', () => ({
 
 				console.log(this.data);
 			});
+	},
+
+	toggleSidebarWidth() {
+		this.isSidebarWide = !this.isSidebarWide;
 	},
 
 	openEditor(section, event) {
