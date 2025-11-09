@@ -133,7 +133,7 @@ const editorTemplate = `
               </div>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && (path.endsWith('body') || path.endsWith('content'))">
+            <template x-if="typeof getValueByPath(path) === 'string' && isRichTextField(path)">
               <div class="rich-text-editor">
                 <div class="rich-text-toolbar">
                   <button type="button" @click="formatText('bold', $event)" class="toolbar-btn" title="Bold">
@@ -158,7 +158,7 @@ const editorTemplate = `
               </div>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !path.endsWith('body') && !path.endsWith('content') && getValueByPath(path).length > 50">
+            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !isRichTextField(path) && getValueByPath(path).length > 50">
               <textarea 
                 :value="getValueByPath(path)"
                 @input="setValueByPath(path, $event.target.value)"
@@ -167,7 +167,7 @@ const editorTemplate = `
               ></textarea>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !path.endsWith('body') && !path.endsWith('content') && getValueByPath(path).length <= 50">
+            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !isRichTextField(path) && getValueByPath(path).length <= 50">
               <input 
                 type="text" 
                 :value="getValueByPath(path)"
@@ -400,6 +400,14 @@ Alpine.data('editor', () => ({
 			.replace(/([A-Z])/g, ' $1') // Add space before capital letters
 			.replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
 			.trim();
+	},
+
+	isRichTextField(path) {
+		if (!path) {
+			return false;
+		}
+		const normalizedPath = path.toLowerCase();
+		return normalizedPath.endsWith('body') || normalizedPath.endsWith('content');
 	},
 
 	getFieldPaths(obj = this.data[this.currentSection], prefix = this.currentSection) {
