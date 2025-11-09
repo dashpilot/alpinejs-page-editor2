@@ -12,9 +12,10 @@ const editorTemplate = `
     <slot></slot>
   </div>
 
-  <div class="editor-sidebar" :class="{ 'open': isEditorOpen, 'wide': isSidebarWide }">
+  <div class="editor-sidebar" :class="{ 'open': isEditorOpen, 'wide': isSidebarWide }" spellcheck="false">
     <div class="editor-header">
-      <div class="editor-header-main">
+      <h2 x-text="currentSection ? 'Edit ' + currentSection : 'Select a section'"></h2>
+      <div class="editor-header-actions">
         <button 
           class="width-toggle-btn" 
           type="button" 
@@ -23,11 +24,9 @@ const editorTemplate = `
           :title="isSidebarWide ? 'Switch to narrow editor' : 'Switch to wide editor'"
         >
           <i :class="isSidebarWide ? 'bi bi-arrows-angle-contract' : 'bi bi-arrows-angle-expand'"></i>
-          <span x-text="isSidebarWide ? 'Narrow panel' : 'Widen panel'"></span>
         </button>
-        <h2 x-text="currentSection ? 'Edit ' + currentSection : 'Select a section'"></h2>
+        <button @click="closeEditor" class="close-btn"></button>
       </div>
-      <button @click="closeEditor" class="close-btn"></button>
     </div>
 
     <div class="editor-content" x-show="currentSection">

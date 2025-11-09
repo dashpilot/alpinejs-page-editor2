@@ -110,7 +110,7 @@
 .editor-sidebar .editor-header {
   position: sticky;
   top: 0;
-  padding: 0 12px 0 0;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -120,17 +120,9 @@
   padding-right: 5px;
 }
 
-.editor-sidebar .editor-header-main {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-}
-
 .editor-sidebar .editor-header h2 {
   margin: 0;
-  padding: 15px 20px;
+  padding: 15px 0;
   font-size: 1.125rem;
   font-weight: 500;
   color: #2d3748;
@@ -141,30 +133,33 @@
   content: '';
   position: absolute;
   bottom: -1px;
-  left: 20px;
+  left: 0;
   width: 60px;
   height: 3px;
   background-color: #4361ee;
 }
 
+.editor-sidebar .editor-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .editor-sidebar .width-toggle-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 14px;
-  margin-left: 8px;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 999px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
   font-size: 0.875rem;
-  color: #495057;
+  color: #6c757d;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   line-height: 1.2;
-}
-
-.editor-sidebar .width-toggle-btn span {
-  font-weight: 500;
 }
 
 .editor-sidebar .width-toggle-btn i {
@@ -173,14 +168,13 @@
 
 .editor-sidebar .width-toggle-btn:hover,
 .editor-sidebar .width-toggle-btn:focus-visible {
-  background-color: #e9ecef;
-  border-color: #ced4da;
+  background-color: #f1f3f5;
   color: #1f2937;
 }
 
 .editor-sidebar .width-toggle-btn:focus-visible {
-  outline: 3px solid rgba(13, 110, 253, 0.35);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.35);
 }
 
 .editor-sidebar .width-toggle-btn:active {
@@ -188,8 +182,7 @@
 }
 
 .editor-sidebar .width-toggle-btn[aria-pressed="true"] {
-  background-color: #e3e7ff;
-  border-color: #c7cffd;
+  background-color: #e9ecef;
   color: #1f2937;
 }
 
