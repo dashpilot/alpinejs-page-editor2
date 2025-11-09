@@ -101,7 +101,46 @@ const editorTemplate = `
                               </template>
                             </div>
                           </template>
-                          <template x-if="key !== 'image'">
+                          <template x-if="key !== 'image' && typeof value === 'string' && isRichTextField(path + '.' + index + '.' + key)">
+                            <div class="rich-text-editor">
+                              <div class="rich-text-toolbar">
+                                <button type="button" @click="formatText('bold', $event)" class="toolbar-btn" title="Bold">
+                                  <i class="bi bi-type-bold"></i>
+                                </button>
+                                <button type="button" @click="formatText('italic', $event)" class="toolbar-btn" title="Italic">
+                                  <i class="bi bi-type-italic"></i>
+                                </button>
+                                <button type="button" @click="insertLink($event)" class="toolbar-btn" title="Insert Link">
+                                  <i class="bi bi-link-45deg"></i>
+                                </button>
+                              </div>
+                              <div 
+                                class="rich-text-content" 
+                                contenteditable="true"
+                                @input="updateRichText(path + '.' + index + '.' + key, $event)"
+                                @blur="updateRichText(path + '.' + index + '.' + key, $event)"
+                                :data-path="path + '.' + index + '.' + key"
+                                x-ref="richTextEditor"
+                                x-init="initRichTextEditor($el, path + '.' + index + '.' + key)"
+                              ></div>
+                            </div>
+                          </template>
+                          <template x-if="key !== 'image' && typeof value === 'string' && !isRichTextField(path + '.' + index + '.' + key) && value.length > 50">
+                            <textarea
+                              :value="value"
+                              @input="item[key] = $event.target.value"
+                              rows="4"
+                              spellcheck="false"
+                            ></textarea>
+                          </template>
+                          <template x-if="key !== 'image' && typeof value === 'string' && !isRichTextField(path + '.' + index + '.' + key) && value.length <= 50">
+                            <input 
+                              type="text" 
+                              :value="value"
+                              @input="item[key] = $event.target.value"
+                            >
+                          </template>
+                          <template x-if="key !== 'image' && typeof value !== 'string'">
                             <input 
                               type="text" 
                               :value="value"
