@@ -133,7 +133,7 @@ const editorTemplate = `
               </div>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && path.endsWith('body') || typeof getValueByPath(path) === 'object' && path.endsWith('content')">
+            <template x-if="typeof getValueByPath(path) === 'string' && path.endsWith('body') || typeof getValueByPath(path) === 'string' && path.endsWith('content')">
               <div class="rich-text-editor">
                 <div class="rich-text-toolbar">
                   <button type="button" @click="formatText('bold', $event)" class="toolbar-btn" title="Bold">
