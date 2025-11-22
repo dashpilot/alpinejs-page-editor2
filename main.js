@@ -7,6 +7,16 @@ window.Alpine = Alpine;
 window.cfg = window.cfg || {};
 window.cfg.data_url = window.cfg.data_url || '/data.json';
 
+// Field type configuration with defaults
+window.cfg.types = window.cfg.types || {
+	image: ['image'],
+	richText: ['body', 'content'],
+	textarea: [] // Keys that should always use textarea (e.g., ['description', 'notes'])
+};
+
+// Textarea threshold for length-based detection (default: 50)
+window.cfg.textareaThreshold = window.cfg.textareaThreshold || 50;
+
 const editorTemplate = `
   <div class="content-area" :class="{ 'editor-open': isEditorOpen }">
     <slot></slot>
@@ -69,6 +79,7 @@ const editorTemplate = `
                         type="text" 
                         :value="item"
                         @input="getValueByPath(path)[index] = $event.target.value"
+                        spellcheck="false"
                       >
                     </div>
                   </template>
@@ -99,7 +110,7 @@ const editorTemplate = `
                       <template x-for="(value, key) in item" :key="key">
                         <div class="input-group" x-show="key !== 'id'">
                           <label x-text="formatLabel(key)"></label>
-                          <template x-if="key === 'image'">
+                          <template x-if="isImageField(key)">
                             <div class="image-input">
                               <label>
                                 Browse
@@ -112,7 +123,7 @@ const editorTemplate = `
                               </template>
                             </div>
                           </template>
-                          <template x-if="key !== 'image' && typeof value === 'string' && isRichTextField(path + '.' + index + '.' + key)">
+                          <template x-if="!isImageField(key) && typeof value === 'string' && isRichTextField(path + '.' + index + '.' + key)">
                             <div class="rich-text-editor">
                               <div class="rich-text-toolbar">
                                 <button type="button" @click="formatText('bold', $event)" class="toolbar-btn" title="Bold">
@@ -136,7 +147,7 @@ const editorTemplate = `
                               ></div>
                             </div>
                           </template>
-                          <template x-if="key !== 'image' && typeof value === 'string' && !isRichTextField(path + '.' + index + '.' + key) && value.length > 50">
+                          <template x-if="!isImageField(key) && typeof value === 'string' && !isRichTextField(path + '.' + index + '.' + key) && (isTextareaField(key) || value.length > window.cfg.textareaThreshold)">
                             <textarea
                               :value="value"
                               @input="item[key] = $event.target.value"
@@ -144,18 +155,20 @@ const editorTemplate = `
                               spellcheck="false"
                             ></textarea>
                           </template>
-                          <template x-if="key !== 'image' && typeof value === 'string' && !isRichTextField(path + '.' + index + '.' + key) && value.length <= 50">
+                          <template x-if="!isImageField(key) && typeof value === 'string' && !isRichTextField(path + '.' + index + '.' + key) && !isTextareaField(key) && value.length <= window.cfg.textareaThreshold">
                             <input 
                               type="text" 
                               :value="value"
                               @input="item[key] = $event.target.value"
+                              spellcheck="false"
                             >
                           </template>
-                          <template x-if="key !== 'image' && typeof value !== 'string'">
+                          <template x-if="!isImageField(key) && typeof value !== 'string'">
                             <input 
                               type="text" 
                               :value="value"
                               @input="item[key] = $event.target.value"
+                              spellcheck="false"
                             >
                           </template>
                         </div>
@@ -169,7 +182,7 @@ const editorTemplate = `
               </div>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && path.endsWith('image')">
+            <template x-if="typeof getValueByPath(path) === 'string' && isImageField(path)">
               <div class="image-input">
                 <label>
                   Browse
@@ -208,7 +221,7 @@ const editorTemplate = `
               </div>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !isRichTextField(path) && getValueByPath(path).length > 50">
+            <template x-if="typeof getValueByPath(path) === 'string' && !isImageField(path) && !isRichTextField(path) && (isTextareaField(path) || getValueByPath(path).length > window.cfg.textareaThreshold)">
               <textarea 
                 :value="getValueByPath(path)"
                 @input="setValueByPath(path, $event.target.value)"
@@ -217,11 +230,12 @@ const editorTemplate = `
               ></textarea>
             </template>
 
-            <template x-if="typeof getValueByPath(path) === 'string' && !path.endsWith('image') && !isRichTextField(path) && getValueByPath(path).length <= 50">
+            <template x-if="typeof getValueByPath(path) === 'string' && !isImageField(path) && !isRichTextField(path) && !isTextareaField(path) && getValueByPath(path).length <= window.cfg.textareaThreshold">
               <input 
                 type="text" 
                 :value="getValueByPath(path)"
                 @input="setValueByPath(path, $event.target.value)"
+                spellcheck="false"
               >
             </template>
           </div>
@@ -462,7 +476,26 @@ Alpine.data('editor', () => ({
 			return false;
 		}
 		const normalizedPath = path.toLowerCase();
-		return normalizedPath.endsWith('body') || normalizedPath.endsWith('content');
+		const richTextTypes = window.cfg.types.richText || ['body', 'content'];
+		return richTextTypes.some((type) => normalizedPath.includes(type));
+	},
+
+	isImageField(keyOrPath) {
+		if (!keyOrPath) {
+			return false;
+		}
+		const normalized = keyOrPath.toLowerCase();
+		const imageTypes = window.cfg.types.image || ['image'];
+		return imageTypes.some((type) => normalized.includes(type));
+	},
+
+	isTextareaField(keyOrPath) {
+		if (!keyOrPath) {
+			return false;
+		}
+		const normalized = keyOrPath.toLowerCase();
+		const textareaTypes = window.cfg.types.textarea || [];
+		return textareaTypes.some((type) => normalized.includes(type));
 	},
 
 	getFieldPaths(obj = this.data[this.currentSection], prefix = this.currentSection) {
